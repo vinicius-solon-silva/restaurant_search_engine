@@ -12,7 +12,7 @@ def findARestaurant(mealType,location):
 	headers = {
         "Accept": "application/json",
         "Authorization": f"{frsqr_key}"
-    }
+    	}
 	
 	url = f"https://api.foursquare.com/v3/places/search?query={mealType}&ll={lat}%2C{long}"
 	response = requests.request("GET", url, headers=headers)
@@ -28,10 +28,11 @@ def findARestaurant(mealType,location):
 
 	photo_url = f"https://api.foursquare.com/v3/places/{restaurant_id}/photos?classifications=indoor%2Coutdoor"
 	photo_response = requests.request("GET", photo_url, headers=headers)
-	photo_response = photo_response.json()
-	try:
+		
+	if photo_response.status_code == 200:
+		photo_response = photo_response.json()
 		photo_link = photo_response[0]['prefix'] + "300x300" + photo_response[0]['suffix']
-	except Exception:
+	else:
 		photo_link = "https://ss3.4sqi.net/img/categories_v2/arts_entertainment/themepark_120.png"
 
 	place_dict = {
@@ -43,7 +44,6 @@ def findARestaurant(mealType,location):
 	print("\nRestaurant name: " + place_dict['name'] + 
 		  "\nAddress: " + place_dict['address'] +
 		  "\nPhoto: " + place_dict['photo'] + "\n")
-	
 
 
 if __name__ == '__main__':
