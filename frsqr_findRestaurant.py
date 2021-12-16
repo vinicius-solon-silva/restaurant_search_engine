@@ -7,12 +7,16 @@ def findARestaurant(mealType,location):
 	geocode_key = input('Enter your google maps geocode API key: ')
 	frsqr_key = input('Enter your Foursquare api key: ')
 
-	lat, long = getGeocodeLocation(geocode_key, location)
+	try:
+		lat, long = getGeocodeLocation(geocode_key, location)
+	except IndexError:
+		print("\nCant find coordinates, please enable billing on your Google Cloud.\n")
+		return 0
 
 	headers = {
         "Accept": "application/json",
         "Authorization": f"{frsqr_key}"
-    	}
+    }
 	
 	url = f"https://api.foursquare.com/v3/places/search?query={mealType}&ll={lat}%2C{long}"
 	response = requests.request("GET", url, headers=headers)
@@ -44,7 +48,7 @@ def findARestaurant(mealType,location):
 	print("\nRestaurant name: " + place_dict['name'] + 
 		  "\nAddress: " + place_dict['address'] +
 		  "\nPhoto: " + place_dict['photo'] + "\n")
-
+	
 
 if __name__ == '__main__':
 
